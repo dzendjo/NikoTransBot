@@ -7,7 +7,6 @@ import qrcode
 from bson.objectid import ObjectId
 from io import BytesIO
 from PIL import ImageDraw, ImageFont, Image
-from pyzbar.pyzbar import decode
 import pytz
 
 import aiohttp
