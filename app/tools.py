@@ -218,7 +218,7 @@ def generate_document(pas: Pass, company: Company, qr_img: Image) -> Image:
     phone_font = ImageFont.truetype("Montserrat-Regular.ttf", 62)
     name_font = ImageFont.truetype("Montserrat-SemiBold.ttf", 62)
     category_font = ImageFont.truetype("Montserrat-SemiBold.ttf", 52)
-    img = Image.open("base.png")
+    img = Image.open("base_without_sign.png")
     line_img = Image.open("line.png")
     draw = ImageDraw.Draw(img)
     tz = pytz.timezone('Europe/Kiev')
@@ -298,23 +298,23 @@ def generate_document(pas: Pass, company: Company, qr_img: Image) -> Image:
         img.paste(line_img, (x_cord_name-26, y_cord-31))
 
     # Draw logistics head name
-    logistic_head_name = 'Гайдаржи\nВалентин Васильович'
-    draw.text((130, 3150), logistic_head_name, (0, 0, 0), font=name_font, align='center')
+    # logistic_head_name = 'Гайдаржи\nВалентин Васильович'
+    # draw.text((130, 3150), logistic_head_name, (0, 0, 0), font=name_font, align='center')
 
     # Draw date
     current_date = pas.complete_date.strftime('%d.%m.%Y')
-    draw.text((1200, 3200), current_date, (0, 0, 0), font=name_font, align='center')
+    draw.text((1800, 3200), current_date, (0, 0, 0), font=name_font, align='center')
 
     # Draw QR code
     img.paste(qr_img, (130, 440))
 
     # Draw sign
-    sign = Image.open('sign.png')
-    sign = sign.resize((277, 325))
+    # sign = Image.open('sign.png')
+    # sign = sign.resize((277, 325))
 
-    img = img.convert("RGBA")
-    sign = sign.convert("RGBA")
-    img.paste(sign, (1900, 3090), sign)
+    # img = img.convert("RGBA")
+    # sign = sign.convert("RGBA")
+    # img.paste(sign, (1900, 3090), sign)
 
     # img.show()
 
