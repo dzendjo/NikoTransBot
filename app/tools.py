@@ -212,16 +212,16 @@ def format_name(name: str, y_phone_cord: int) -> (str, int):
     return new_name, y_phone_cord
 
 
-def generate_document(pas: Pass, company: Company) -> Image:
+def generate_document(pas: Pass, company: Company, qr_img: Image) -> Image:
     document_number_font = ImageFont.truetype("montserrat_extra_bold.ttf", 100)
     vehicle_number_font = ImageFont.truetype("montserrat_bold.ttf", 86)
     phone_font = ImageFont.truetype("Montserrat-Regular.ttf", 62)
     name_font = ImageFont.truetype("Montserrat-SemiBold.ttf", 62)
     category_font = ImageFont.truetype("Montserrat-SemiBold.ttf", 52)
     img = Image.open("base.png")
-    qr_img = Image.open("qr.jpg")
     line_img = Image.open("line.png")
     draw = ImageDraw.Draw(img)
+    tz = pytz.timezone('Europe/Kiev')
 
     # Pass number
     draw.text((1600, 210), pas.num_id, (0, 0, 0), font=document_number_font)
@@ -234,11 +234,11 @@ def generate_document(pas: Pass, company: Company) -> Image:
     draw.text((1600, 620), trailer_number, (0, 0, 0), font=vehicle_number_font)
 
     # Start date
-    start_date = pas.start_date.strftime('%d.%m.%Y %H:%M').replace(' ', ', ')
+    start_date = pas.start_date.replace(tzinfo=pytz.utc).astimezone(tz).strftime('%d.%m.%Y %H:%M').replace(' ', ', ')
     draw.text((960, 900), start_date, (0, 0, 0), font=vehicle_number_font)
 
     # End date
-    end_date = pas.end_date.strftime('%d.%m.%Y %H:%M').replace(' ', ', ')
+    end_date = pas.end_date.replace(tzinfo=pytz.utc).astimezone(tz).strftime('%d.%m.%Y %H:%M').replace(' ', ', ')
     draw.text((960, 1010), end_date, (0, 0, 0), font=vehicle_number_font)
 
     # Driver name
@@ -316,7 +316,7 @@ def generate_document(pas: Pass, company: Company) -> Image:
     sign = sign.convert("RGBA")
     img.paste(sign, (1900, 3090), sign)
 
-    img.show()
+    # img.show()
 
     return img.convert("RGB")
 

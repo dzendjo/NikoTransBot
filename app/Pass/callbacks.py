@@ -412,7 +412,7 @@ async def validation_approve():
 
         # 5. Generate PDF file
         loop = asyncio.get_running_loop()
-        doc_img = await loop.run_in_executor(None, tools.generate_document, pas, company)
+        doc_img = await loop.run_in_executor(None, tools.generate_document, pas, company, qr_image)
 
         img_io = BytesIO()
         doc_img.save(img_io, 'PDF')
@@ -592,25 +592,26 @@ async def export_active():
                 continue
 
             company = await Company.find_one(ObjectId(pas.company_id))
-            row = [
-                pas.num_id,
-                company.name,
-                company.contact_FIO,
-                company.contact_phone,
-                pas.start_date,
-                pas.end_date,
-                pas.vehicle_number,
-                pas.trailer_number,
-                pas.start_place,
-                pas.end_place,
-                pas.driver_FIO,
-                pas.driver_phone,
-                pas.goods,
-                pas.send_date,
-                pas.complete_date,
-                pas.manager_username
-            ]
-            writer.writerow(row)
+            if company:
+                row = [
+                    pas.num_id,
+                    company.name,
+                    company.contact_FIO,
+                    company.contact_phone,
+                    pas.start_date,
+                    pas.end_date,
+                    pas.vehicle_number,
+                    pas.trailer_number,
+                    pas.start_place,
+                    pas.end_place,
+                    pas.driver_FIO,
+                    pas.driver_phone,
+                    pas.goods,
+                    pas.send_date,
+                    pas.complete_date,
+                    pas.manager_username
+                ]
+                writer.writerow(row)
 
     await SendDocument(context.user.id, InputFile(file_name, 'text/csv', FileIO(file_name))).send()
     await EditMessageText(T('export/end_export_mt'), context.user.id, m.message_id).send()
